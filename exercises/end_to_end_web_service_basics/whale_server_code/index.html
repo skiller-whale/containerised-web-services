@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Hello Whale</title>
+  </head>
+  <body>
+    <!-- TODO 1: Change this.-->
+    <h1>I'm using AWS!</h1>
+    <button type="button" onClick="getAllWhales()">Refresh whales!</button><br><br>
+    <form>
+      <label for="whalename">New Whale:</label>
+      <input type="text" id="whalename" name="whalename"><br><br>
+      <input type="button" onClick="addWhale()" value="Add Whale!">
+    </form><br><br>
+    <h2>All Whales:</h2>
+    <p id="whalebox"></p>
+    <h2>Info:</h2>
+    <p id="info">No info yet, try adding a whale.</p>
+  </body>
+  <script>
+    async function getAllWhales() {
+      let whales
+      try {
+        const response = await fetch("/whales")
+        whales = await response.text()
+      } catch (error) {
+        console.log(error)
+        whales = `API error: ${error}`
+      }
+      document.getElementById("whalebox").textContent = whales
+    }
+
+    async function addWhale() {
+      const whale_name = document.getElementById("whalename").value
+      let infoText
+      try {
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ whale_name })
+        }
+        const response = await fetch("/whales", requestOptions)
+        infoText = `Successfully added ${whale_name}.`
+      } catch (error) {
+        console.log(error)
+        infoText = `Failed to add ${whale_name} - error: ${error}`
+      }
+
+      document.getElementById("info").textContent = infoText
+      getAllWhales()
+    }
+
+    function onLoad() {
+      getAllWhales()
+    }
+
+    document.addEventListener("DOMContentLoaded", onLoad);
+  </script>
+</html>

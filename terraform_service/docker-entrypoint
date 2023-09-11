@@ -1,0 +1,34 @@
+#!/bin/sh
+
+# Exit immediately if any command exits with a non-zero status.
+set -e
+
+# Read the attendance id from the file `attendance_id`
+TF_VAR_attendance_id=$(cat ./attendance_id)
+
+# Check if the attendance id is still the default, and if so exit with an appropriate error message
+if [ $TF_VAR_attendance_id = "your_attendance_id_here" ];
+then
+    echo "Could not find a valid attendance id in attendance_id file. Please replace the file contents with your attendance id and try again."
+    exit 1
+fi
+
+# Export the attendance id as an environment variable so that terraform can use it
+export TF_VAR_attendance_id
+
+# if an argument is passed, use it as the name of the exercise directory and init the terraform
+if [ $# -eq 1 ];
+then
+    # Change to the directory passed as the first argument, which should be the relevant exercise directory
+    cd "exercises/$1"
+
+    # Initialise terraform - this can't be in the Dockerfile because the subdirectory we want to init is not known at build time.
+    terraform init
+
+    # Leave the shell open to further commands
+    /bin/sh
+else
+    # This is the default from compose - at that point we don't know the specific module, so we just ensure the image is downloaded and the attendance id set.
+    echo "Terraform container created and attendance id validated.
+          Use 'docker compose run terraform <module_key>' to open a shell in the relevant exercise directory."
+fi

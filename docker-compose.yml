@@ -1,0 +1,34 @@
+version: "3.7"
+name: "skiller-whale-aws"
+volumes:
+  aws_credentials:
+services:
+  sync:
+    image: "ghcr.io/skiller-whale/learnersync"
+    environment:
+      SERVER_URL: "https://train.skillerwhale.com/"
+      WATCHER_BASE_PATH: "/app/exercises"
+      ATTENDANCE_ID_FILE: "/app/sync/attendance_id"
+      WATCHED_EXTS: "tf"
+      IGNORE_DIRS: ".git .terraform"
+    volumes:
+      - ./exercises:/app/exercises:ro
+      - ./attendance_id:/app/sync/attendance_id:ro
+  terraform:
+    build: ./terraform_service
+    volumes:
+      - ./exercises:/app/exercises
+      - ./attendance_id:/app/attendance_id:ro
+      - aws_credentials:/root/.aws:ro
+    tty: true
+    stdin_open: true
+  aws:
+    image: amazon/aws-cli
+    profiles: ["aws-cli"] # Only run this when targetting explicitly
+    volumes:
+      - aws_credentials:/root/.aws:ro
+  aws_credentials:
+    build: ./aws_credential_service
+    volumes:
+      - ./attendance_id:/app/attendance_id:ro
+      - aws_credentials:/root/.aws
