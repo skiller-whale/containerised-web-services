@@ -106,7 +106,11 @@ def main(base_dir='/root/.aws'):
     if not account_allocation:
         return False
 
-    logging.info('Account allocated successfully - AWS console link: %s', account_allocation["console_link"])
+    logging.info("""Account allocated successfully.
+                    Account ID: %s
+                    AWS console link: %s""",
+                    account_allocation["aws_account_number"],
+                    account_allocation["console_link"])
 
     # Write the credentials (and config) to files.
     return write_credentials_to_file(account_allocation['credentials'], base_dir)
