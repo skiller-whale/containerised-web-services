@@ -13,8 +13,15 @@ then
     exit 1
 fi
 
-# This is the default from compose - at that point we don't know the specific module, so we just ensure the image is downloaded and the attendance id set.
-echo "Terraform container created and attendance id validated.
-        Use 'docker compose exec terraform setup <module_key>' to open a shell in the relevant exercise directory."
+# Export the attendance id as an environment variable so that terraform can use it
+export TF_VAR_attendance_id
 
-tail -f /dev/null # Keep the container open
+#TODO - add argument validation
+# Change to the directory passed as the first argument, which should be the relevant exercise directory
+cd "exercises/$1"
+
+# Initialise terraform - this can't be in the Dockerfile because the subdirectory we want to init is not known at build time.
+terraform init
+
+# Leave the shell open to further commands
+/bin/sh
