@@ -177,7 +177,7 @@ module "vpc" {
 #   vpc_id      = module.vpc.vpc_id
 # }
 
-# You want access in to the LB from the internet.
+# # You want access in to the LB from the internet.
 # resource "aws_vpc_security_group_ingress_rule" "lb_http" {
 #   security_group_id = aws_security_group.load_balancer.id
 

@@ -9,7 +9,7 @@ services:
       SERVER_URL: "https://train.skillerwhale.com/"
       WATCHER_BASE_PATH: "/app/exercises"
       ATTENDANCE_ID_FILE: "/app/sync/attendance_id"
-      WATCHED_EXTS: "tf"
+      WATCHED_EXTS: "tf tfstate info"
       IGNORE_DIRS: ".git .terraform"
     volumes:
       - ./exercises:/app/exercises:ro
@@ -20,8 +20,7 @@ services:
       - ./exercises:/app/exercises
       - ./attendance_id:/app/attendance_id:ro
       - aws_credentials:/root/.aws:ro
-    tty: true
-    stdin_open: true
+    stop_signal: SIGKILL
   aws:
     image: amazon/aws-cli
     profiles: ["aws-cli"] # Only run this when targetting explicitly
