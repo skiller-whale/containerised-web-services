@@ -16,9 +16,17 @@ fi
 # Export the attendance id as an environment variable so that terraform can use it
 export TF_VAR_attendance_id
 
-#TODO - add argument validation
+if [ $# -eq 0 ]
+  then
+    echo "No module_key supplied - please run 'docker compose exec terraform setup <module_key>' to open a shell in the relevant exercise directory."
+    exit 1
+fi
+
 # Change to the directory passed as the first argument, which should be the relevant exercise directory
 cd "exercises/$1"
+
+# If there is existing state, delete it. Any state that is there should be from a previous session, and so will be obsolete as the AWS account will probably be different, and definitely cleared up.
+rm -f terraform.tfstate terraform.tfstate.backup
 
 # Initialise terraform - this can't be in the Dockerfile because the subdirectory we want to init is not known at build time.
 terraform init

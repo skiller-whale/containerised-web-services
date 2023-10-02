@@ -37,8 +37,7 @@ resource "aws_route_table_association" "private" {
 
 resource "aws_eip" "nat_gateway" {
   count = var.nat_gateway ? 1 : 0
-
-  vpc = true
+  domain = "vpc"
 }
 
 # We need one of these if we want to allow our private subnets to access the internet. Our ECS tasks need internet access to pull images from ECR, unless we set up a VPC endpoint for ECR.
