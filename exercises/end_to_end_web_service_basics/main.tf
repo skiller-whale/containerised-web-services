@@ -27,7 +27,7 @@ module "vpc" {
 #   name = "apps"
 # }
 
-# resource "aws_cloudwatch_log_group" "whale-logs" {
+# resource "aws_cloudwatch_log_group" "whale_logs" {
 #   name              = "/fargate/apps/whale" #fargate/cluster_name/service_name
 #   retention_in_days = 1 # Lower than you'd have in production
 # }
@@ -64,7 +64,7 @@ module "vpc" {
 #   ])
 # }
 
-# resource "aws_ecs_service" "whale-service" {
+# resource "aws_ecs_service" "whale_service" {
 #   name            = "whale-service"
 #   cluster         = aws_ecs_cluster.cluster.id
 #   task_definition = aws_ecs_task_definition.app.arn
@@ -149,6 +149,7 @@ module "vpc" {
 # }
 
 # resource "aws_lb_target_group" "whale_target_group" {
+#   name     = "whale-tasks-tg"
 #   port     = 80
 #   protocol = "HTTP"
 #   target_type = "ip" # This needs to be IP, not instance, because we're using Fargate.
