@@ -29,7 +29,7 @@ def allocate_aws_account(attendance_id):
             body = response.json()
             return body['account_allocation']
         case 403:
-            logging.error('Error getting credentials - please check you have set your attendance id correctly in the attendance_id file, and retry.')
+            logging.error('Error getting AWS credentials - This can happen if you run setup more than 15 minutes before a session, or if you have not set the correct attendance ID. Check your attendance id is correct, or wait until closer to the session time, then run `docker compose up --build` again.')
             return False
         case _: # This may happen if we've run out of accounts to allocate.
             logging.error('Server error getting credentials: %s - please try again later or contact Skiller Whale for support.', response.reason)
